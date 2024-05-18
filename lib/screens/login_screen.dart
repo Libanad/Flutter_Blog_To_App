@@ -104,6 +104,7 @@ Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Dashboa
             controller: _emailController,
             decoration: InputDecoration(
               labelText: 'Email',
+              prefixIcon: const Icon(Icons.person),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -122,6 +123,7 @@ Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Dashboa
             controller: _passwordController,
             decoration: InputDecoration(
               labelText: 'Password',
+              prefixIcon: const Icon(Icons.lock),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
