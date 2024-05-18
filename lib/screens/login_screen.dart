@@ -1,5 +1,6 @@
 
 import 'package:blog_app/screens/dashboard_screen.dart';
+import 'package:blog_app/screens/forgotPasswordScreen.dart';
 import 'package:blog_app/screens/register_scrreen.dart';
 import 'package:flutter/material.dart';
 
@@ -31,8 +32,9 @@ class LoginScreen extends StatelessWidget {
                 child: TextButton(
                   onPressed: () {
                     // Handle Forgot Password
-                    // Navigator.of(context).pop();
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ForgotPasswordScreen()));
                   },
+                  
                   child: const Text(
                     'Forgot Password?',
                     style: TextStyle(color: Colors.blue),
