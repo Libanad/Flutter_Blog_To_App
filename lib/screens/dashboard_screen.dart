@@ -1,14 +1,35 @@
 import 'package:flutter/material.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
+
+  @override
+  _DashboardScreenState createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  int _selectedIndex = 0; // Index of the selected tab
+
+  // List of tabs
+  static const List<Widget> _widgetOptions = <Widget>[
+    Text('Home'), // Replace with your home screen widget
+    Text('Search'), // Replace with your search screen widget
+    Text('Notifications'), // Replace with your notifications screen widget
+    Text('Profile'), // Replace with your profile screen widget
+  ];
+
+  // Function to handle tab selection
+  void _onItemTapped(int index) {
+    // Update the selected index
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        
-      ),
+      appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -34,7 +55,7 @@ class DashboardScreen extends StatelessWidget {
                         color: Colors.grey[200],
                         child: ListTile(
                           title: const Text(
-                            'Blog 1', // Change the title to "Blog 1"
+                            'Blog 1',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           subtitle: const Text('Post content goes here...'),
@@ -90,8 +111,30 @@ class DashboardScreen extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+            backgroundColor: Colors.black
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications),
+            label: 'Notifications',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blue,
+        onTap: _onItemTapped,
+      ),
     );
   }
 }
-
-
