@@ -1,3 +1,5 @@
+import 'package:blog_app/screens/homePageScreen.dart';
+import 'package:blog_app/screens/notificationScreen.dart';
 import 'package:flutter/material.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -12,9 +14,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   // List of tabs
   static const List<Widget> _widgetOptions = <Widget>[
-    Text('Home'), // Replace with your home screen widget
+    HomeScreen(), // Replace with your home screen widget
     Text('Search'), // Replace with your search screen widget
-    Text('Notifications'), // Replace with your notifications screen widget
+    NotificationScreen(), // Notification screen widget
     Text('Profile'), // Replace with your profile screen widget
   ];
 
@@ -30,47 +32,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Welcome back, User!',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'Recent Posts:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    for (int index = 0; index < 8; index++)
-                      Card(
-                        margin: const EdgeInsets.only(bottom: 20),
-                        color: Colors.grey[200],
-                        child: ListTile(
-                          title: const Text(
-                            'Blog 1',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: const Text('Post content goes here...'),
-                          onTap: () {
-                            // Navigate to post details page
-                          },
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+      body: _widgetOptions[_selectedIndex], // Display the selected widget
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -85,21 +47,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ),
             ListTile(
-              title: const Text('My Profile'),
+              title: const Text('Create Post'),
               onTap: () {
-                // Navigate to user profile page
+                // Navigate to create post
               },
             ),
             ListTile(
-              title: const Text('Categories'),
+              title: const Text('Update Password'),
               onTap: () {
-                // Navigate to categories page
-              },
-            ),
-            ListTile(
-              title: const Text('Settings'),
-              onTap: () {
-                // Navigate to settings page
+                // Navigate to update page
               },
             ),
             ListTile(
@@ -116,7 +72,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
-            backgroundColor: Colors.black
+            backgroundColor: Colors.black,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
@@ -137,4 +93,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
     );
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: DashboardScreen(),
+  ));
 }

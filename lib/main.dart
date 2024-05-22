@@ -1,4 +1,5 @@
 import 'package:blog_app/screens/dashboard_screen.dart';
+import 'package:blog_app/screens/notificationScreen.dart';
 import 'package:blog_app/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
