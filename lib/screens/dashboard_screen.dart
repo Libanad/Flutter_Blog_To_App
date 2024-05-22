@@ -1,5 +1,6 @@
 import 'package:blog_app/screens/homePageScreen.dart';
 import 'package:blog_app/screens/notificationScreen.dart';
+import 'package:blog_app/screens/searchScreen.dart';
 import 'package:flutter/material.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -15,7 +16,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   // List of tabs
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(), // Replace with your home screen widget
-    Text('Search'), // Replace with your search screen widget
+    SearchScreen(), // Replace with your search screen widget
     NotificationScreen(), // Notification screen widget
     Text('Profile'), // Replace with your profile screen widget
   ];
