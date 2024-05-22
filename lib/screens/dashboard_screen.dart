@@ -1,3 +1,4 @@
+import 'package:blog_app/screens/CreatePostPage.dart';
 import 'package:blog_app/screens/homePageScreen.dart';
 import 'package:blog_app/screens/notificationScreen.dart';
 import 'package:blog_app/screens/profileScreen.dart';
@@ -52,7 +53,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ListTile(
               title: const Text('Create Post'),
               onTap: () {
-                // Navigate to create post
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CreatePostScreen(),));
               },
             ),
             ListTile(
