@@ -2,6 +2,7 @@ import 'package:blog_app/screens/homePageScreen.dart';
 import 'package:blog_app/screens/notificationScreen.dart';
 import 'package:blog_app/screens/profileScreen.dart';
 import 'package:blog_app/screens/searchScreen.dart';
+import 'package:blog_app/screens/updatePassword.dart';
 import 'package:flutter/material.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -57,7 +58,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ListTile(
               title: const Text('Update Password'),
               onTap: () {
-                // Navigate to update page
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => const UpdatePasswordScreen(),));
               },
             ),
             ListTile(
