@@ -1,4 +1,4 @@
-import 'package:blog_app/screens/CreatePostPage.dart';
+import 'package:blog_app/screens/CreatePostScreen.dart';
 import 'package:blog_app/screens/homePageScreen.dart';
 import 'package:blog_app/screens/notificationScreen.dart';
 import 'package:blog_app/screens/profileScreen.dart';
@@ -99,8 +99,4 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 }
 
-void main() {
-  runApp(MaterialApp(
-    home: DashboardScreen(),
-  ));
-}
+
