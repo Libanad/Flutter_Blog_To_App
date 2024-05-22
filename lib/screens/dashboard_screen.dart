@@ -1,5 +1,6 @@
 import 'package:blog_app/screens/CreatePostScreen.dart';
 import 'package:blog_app/screens/homePageScreen.dart';
+import 'package:blog_app/screens/logoutScreen.dart';
 import 'package:blog_app/screens/notificationScreen.dart';
 import 'package:blog_app/screens/profileScreen.dart';
 import 'package:blog_app/screens/searchScreen.dart';
@@ -65,7 +66,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ListTile(
               title: const Text('Logout'),
               onTap: () {
-                // Perform logout action
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LogoutScreen(),));
               },
             ),
           ],
