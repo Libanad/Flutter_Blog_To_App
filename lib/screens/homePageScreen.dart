@@ -11,6 +11,7 @@ class HomeScreen extends StatelessWidget {
       (index) => {
         'title': 'Blog Post ${index + 1}',
         'content': 'This is a brief description of blog post ${index + 1}.',
+        'image':'https://letsenhance.io/+${index+1}',
       },
     );
 

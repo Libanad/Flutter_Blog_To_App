@@ -19,10 +19,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   // List of tabs
   static const List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(), // Replace with your home screen widget
-    SearchScreen(), // Replace with your search screen widget
-    NotificationScreen(), // Notification screen widget
-    ProfileScreen(), // Replace with your profile screen widget
+    HomeScreen(), 
+    SearchScreen(), 
+    NotificationScreen(), 
+    ProfileScreen(), 
   ];
 
   // Function to handle tab selection

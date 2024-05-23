@@ -1,4 +1,6 @@
 import 'package:blog_app/screens/dashboard_screen.dart';
+import 'package:blog_app/screens/homePageScreen.dart';
+import 'package:blog_app/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,7 +16,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       
-      home: DashboardScreen(),
+      home: HomeScreen(),
     );
   }
 }
