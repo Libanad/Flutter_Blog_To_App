@@ -104,6 +104,7 @@ Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Dashboa
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           TextFormField(
+            
             controller: _emailController,
             decoration: InputDecoration(
               labelText: 'Email',

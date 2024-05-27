@@ -5,13 +5,13 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Sample blog data
+    // Sample blog data with image URLs
     final List<Map<String, String>> blogs = List.generate(
       10,
       (index) => {
         'title': 'Blog Post ${index + 1}',
         'content': 'This is a brief description of blog post ${index + 1}.',
-        'image':'https://letsenhance.io/+${index+1}',
+        'image': ' ${index + 1}', // Placeholder image URL
       },
     );
 
@@ -27,6 +27,12 @@ class HomeScreen extends StatelessWidget {
           return Card(
             margin: const EdgeInsets.symmetric(vertical: 8.0),
             child: ListTile(
+              leading: Image.network(
+                blog['image']!,
+                width: 50,
+                height: 50,
+                fit: BoxFit.cover,
+              ),
               title: Text(
                 blog['title']!,
                 style: const TextStyle(fontWeight: FontWeight.bold),
