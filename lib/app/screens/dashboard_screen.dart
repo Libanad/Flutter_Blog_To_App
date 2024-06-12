@@ -1,10 +1,10 @@
-import 'package:blog_app/screens/CreatePostScreen.dart';
-import 'package:blog_app/screens/homePageScreen.dart';
-import 'package:blog_app/screens/logoutScreen.dart';
-import 'package:blog_app/screens/notificationScreen.dart';
-import 'package:blog_app/screens/profileScreen.dart';
-import 'package:blog_app/screens/searchScreen.dart';
-import 'package:blog_app/screens/updatePassword.dart';
+import 'package:blog_app/app/screens/CreatePostScreen.dart';
+import 'package:blog_app/app/screens/homePageScreen.dart';
+import 'package:blog_app/app/screens/logoutScreen.dart';
+import 'package:blog_app/app/screens/notificationScreen.dart';
+import 'package:blog_app/app/screens/profileScreen.dart';
+import 'package:blog_app/app/screens/searchScreen.dart';
+import 'package:blog_app/app/screens/updatePassword.dart';
 import 'package:flutter/material.dart';
 
 class DashboardScreen extends StatefulWidget {

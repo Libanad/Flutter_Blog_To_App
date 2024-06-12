@@ -1,7 +1,7 @@
 
-import 'package:blog_app/screens/dashboard_screen.dart';
-import 'package:blog_app/screens/forgotPasswordScreen.dart';
-import 'package:blog_app/screens/register_scrreen.dart';
+import 'package:blog_app/app/screens/dashboard_screen.dart';
+import 'package:blog_app/app/screens/forgotPasswordScreen.dart';
+import 'package:blog_app/app/screens/register_scrreen.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatelessWidget {

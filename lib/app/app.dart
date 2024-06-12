@@ -1,5 +1,5 @@
-import 'package:blog_app/screens/splash_screen.dart';
-import 'package:blog_app/theme/theme_data.dart';
+import 'package:blog_app/app/screens/splash_screen.dart';
+import 'package:blog_app/app/screens/theme_data.dart';
 import 'package:flutter/material.dart';
 
 class MyApp extends StatelessWidget {
