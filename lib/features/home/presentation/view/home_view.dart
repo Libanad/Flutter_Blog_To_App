@@ -12,9 +12,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
   int _selectedIndex = 0;
  
   static const List<Widget> _widgetOptions = <Widget>[
-    Center(child: Text('Dashboard')),
-    Center(child: Text('Cart')),
-    Center(child: Text('My Orders')),
+    Center(child: Text('Home')),
+    Center(child: Text('Search')),
+    Center(child: Text('Notification')),
     Center(child: Text('Profile')),
   ];
  
@@ -35,16 +35,16 @@ class _HomeViewState extends ConsumerState<HomeView> {
           unselectedIconTheme: const IconThemeData(color: Colors.black),
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.dashboard),
-              label: 'Dashboard',
+              icon: Icon(Icons.home),
+              label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.shop_2),
-              label: 'Cart',
+              icon: Icon(Icons.search),
+              label: 'Search',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_bag),
-              label: 'My Orders',
+              icon: Icon(Icons.notification_add),
+              label: 'Notification',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),
