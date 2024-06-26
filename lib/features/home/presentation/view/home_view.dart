@@ -1,34 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
- 
+
 class HomeView extends ConsumerStatefulWidget {
   const HomeView({super.key});
- 
+
   @override
   ConsumerState<HomeView> createState() => _HomeViewState();
 }
- 
+
 class _HomeViewState extends ConsumerState<HomeView> {
   int _selectedIndex = 0;
- 
-  static const List<Widget> _widgetOptions = <Widget>[
-    Center(child: Text('Home')),
-    Center(child: Text('Search')),
-    Center(child: Text('Notification')),
-    Center(child: Text('Profile')),
+
+  static final List<Widget> _widgetOptions = <Widget>[
+    const BlogListView(),
+    const Center(child: Text('Search')),
+    const Center(child: Text('Notification')),
+    const Center(child: Text('Profile')),
   ];
- 
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
- 
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          title: const Text('Home'),
+        ),
         body: _widgetOptions.elementAt(_selectedIndex),
         bottomNavigationBar: BottomNavigationBar(
           selectedIconTheme: const IconThemeData(color: Colors.purple),
@@ -56,6 +58,53 @@ class _HomeViewState extends ConsumerState<HomeView> {
           onTap: _onItemTapped,
         ),
       ),
+    );
+  }
+}
+
+class BlogListView extends StatelessWidget {
+  const BlogListView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final List<Map<String, String>> blogs = List.generate(
+      10,
+      (index) => {
+        'title': 'Blog Post ${index + 1}',
+        'content': 'This is a brief description of blog post ${index + 1}.',
+        'image': 'https://via.placeholder.com/50?text=${index + 1}', // Placeholder image URL
+      },
+    );
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(16.0),
+      itemCount: blogs.length,
+      itemBuilder: (context, index) {
+        final blog = blogs[index];
+        return Card(
+          margin: const EdgeInsets.symmetric(vertical: 8.0),
+          child: ListTile(
+            leading: Image.network(
+              blog['image']!,
+              width: 50,
+              height: 50,
+              fit: BoxFit.cover,
+            ),
+            title: Text(
+              blog['title']!,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            subtitle: Text(blog['content']!),
+            onTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Clicked on ${blog['title']}'),
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }
