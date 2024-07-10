@@ -53,4 +53,6 @@ class AuthViewModel extends StateNotifier<AuthState> {
   void openHomeView() {
     navigator.openHomeView();
   }
+
+  loginStudent(String s, String t) {}
 }

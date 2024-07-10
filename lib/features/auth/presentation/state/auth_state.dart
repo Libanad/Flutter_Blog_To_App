@@ -17,6 +17,8 @@ class AuthState {
         obscurePassword: true,
       );
 
+  get imageName => null;
+
   AuthState copyWith({
     bool? isLoading,
     bool? obscurePassword,

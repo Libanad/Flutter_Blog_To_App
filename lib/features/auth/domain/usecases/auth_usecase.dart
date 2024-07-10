@@ -17,7 +17,9 @@ class AuthUseCase {
     return authRepository.registerUser(auth);
   }
  
-  Future<Either<Failure, bool>> loginUser(String email, String password) {
-    return authRepository.loginUser(email, password);
+  Future<Either<Failure, bool>> loginUser(String? email, String? password) {
+    return authRepository.loginUser(email ?? '', password ?? '');
   }
+
+ 
 }
