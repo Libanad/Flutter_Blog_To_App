@@ -17,9 +17,18 @@ class AuthUseCase {
     return authRepository.registerUser(auth);
   }
  
-  Future<Either<Failure, bool>> loginUser(String? email, String? password) {
-    return authRepository.loginUser(email ?? '', password ?? '');
+Future<Either<Failure, bool>> loginUser(String? email, String? password) async {
+  
+    try {
+      final result = await authRepository.loginUser(email ?? '', password ?? '');
+      return result;
+    } catch (e) {
+      // Log and handle the error
+      print('Exception caught during login: ${e.toString()}');
+      return Left(Failure(error: 'An error occurred during login'));
+    }
   }
-
+  
+  
  
 }
