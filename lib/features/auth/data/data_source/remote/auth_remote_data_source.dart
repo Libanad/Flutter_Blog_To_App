@@ -31,7 +31,10 @@ class AuthRemoteDataSource {
     try {
       Response response = await dio.post(
         ApiEndPoints.registerUser,
-        data: authApiModel.fromEntity(authEntity).toJson(),
+        data:{
+          "_id": DateTime.now().toString(), "username": authEntity.fName, "lName": authEntity.lName, "email": authEntity.email, "password": authEntity.password
+
+        }
       );
       if (response.statusCode == 201) {
         return const Right(true);
@@ -51,6 +54,8 @@ class AuthRemoteDataSource {
     try {
       Response response = await dio.post(ApiEndPoints.loginUser,
           data: {'email': email, 'password': password});
+      print("Cant login");
+
  
       if (response.statusCode == 201) {
         final token = response.data['token'];
@@ -63,6 +68,7 @@ class AuthRemoteDataSource {
           error: response.data['message'],
           statusCode: response.statusCode.toString()));
     } on DioException catch (e) {
+      print("Cant login");
       return Left(Failure(error: e.error.toString()));
     }
   }
