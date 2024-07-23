@@ -10,7 +10,7 @@ final authHiveModelProvider = Provider(
   (ref) => AuthHiveModel.empty(),
 );
 
-@HiveType(typeId: HiveTableConstant.userBoxId) // New constant for login
+@HiveType(typeId: HiveTableConstant.userBoxId) // Ensure this is an integer constant
 class AuthHiveModel {
   @HiveField(0)
   final String userId;
@@ -36,7 +36,7 @@ class AuthHiveModel {
     required this.password,
   }) : userId = userId ?? const Uuid().v4();
 
-  // empty constructor
+  // Empty constructor
   AuthHiveModel.empty()
       : this(
           userId: '',
@@ -56,7 +56,7 @@ class AuthHiveModel {
       );
 
   AuthHiveModel fromEntity(AuthEntity entity) => AuthHiveModel(
-        userId: const Uuid().v4(),
+        userId: entity.userId, // Use the userId from entity
         fName: entity.fName,
         lName: entity.lName,
         email: entity.email,
