@@ -58,7 +58,7 @@ void main() {
     // Act
     await container
         .read(authViewModelProvider.notifier)
-        .loginStudent('liban', 'liban123');
+        .loginUser('liban', 'liban123');
 
     final authState = container.read(authViewModelProvider);
 
@@ -83,7 +83,7 @@ void main() {
     // Act
     await container
         .read(authViewModelProvider.notifier)
-        .loginStudent('liban', 'liban123');
+        .loginUser('liban', 'liban123');
 
     final authState = container.read(authViewModelProvider);
 

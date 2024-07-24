@@ -341,25 +341,71 @@
 //     );
 //   }
 // }
-
-import 'package:blog_app/features/auth/presentation/navigator/login_navigator.dart';
+import 'package:blog_app/app/screens/forgotPasswordScreen.dart';
 import 'package:blog_app/features/auth/presentation/view_model/auth_view_model.dart';
+import 'package:blog_app/features/home/presentation/view/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
- 
+import 'package:blog_app/features/auth/presentation/navigator/login_navigator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+Future<void> saveUserData(String username, String email) async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setString('username', username);
+  await prefs.setString('email', email);
+  // You can save other data similarly
+}
+
+
 class LoginView extends ConsumerStatefulWidget {
   const LoginView({super.key});
- 
+
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _LoginViewState();
+  ConsumerState<LoginView> createState() => _LoginViewState();
 }
- 
+
 class _LoginViewState extends ConsumerState<LoginView> {
   final _formSignInKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool rememberPassword = true;
- 
+  bool rememberPassword = false;
+
+Future<void> _login() async {
+  if (_formSignInKey.currentState!.validate()) {
+    // Trigger the login action in AuthViewModel
+    final authViewModel = ref.read(authViewModelProvider.notifier);
+    authViewModel.loginUser(
+      _emailController.text,
+      _passwordController.text,
+    );
+    
+
+    // After login attempt, get the updated state
+    final authState = ref.watch(authViewModelProvider);
+
+    if (authState.error == null) {
+      // Navigate to home or any other screen on successful login
+       final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('email', _emailController.text);
+      ref.read(loginViewNavigatorProvider).openHomeView();
+        ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Logged In')),
+      );
+      Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const HomeView(),
+                  ),
+                );
+    } else {
+      // Show error message on failed login
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(content: Text(authState.error ?? 'Login failed')),
+      // );
+    }
+  }
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -387,46 +433,34 @@ class _LoginViewState extends ConsumerState<LoginView> {
                           'assets/images/blog.jpeg',
                           height: 200,
                         ),
-                        const SizedBox(
-                          height: 1.0,
-                        ),
-                        const SizedBox(
-                          height: 40.0,
-                        ),
+                        const SizedBox(height: 20.0),
                         TextFormField(
                           controller: _emailController,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter Email';
                             }
+                            if (!value.contains('@')) {
+                              return 'Please enter a valid Email';
+                            }
                             return null;
                           },
                           decoration: InputDecoration(
-                            label: const Text(
-                              'Email',
-                            ),
+                            labelText: 'Email',
                             hintText: 'Enter Email',
                             prefixIcon: const Icon(Icons.email),
-                            hintStyle: const TextStyle(
-                              color: Colors.black26,
-                            ),
+                            hintStyle: const TextStyle(color: Colors.black26),
                             border: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                color: Colors.black12, // Default border color
-                              ),
+                              borderSide: const BorderSide(color: Colors.black12),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             enabledBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                color: Colors.black12, // Default border color
-                              ),
+                              borderSide: const BorderSide(color: Colors.black12),
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
                         ),
-                        const SizedBox(
-                          height: 25.0,
-                        ),
+                        const SizedBox(height: 25.0),
                         TextFormField(
                           controller: _passwordController,
                           obscureText: true,
@@ -438,29 +472,21 @@ class _LoginViewState extends ConsumerState<LoginView> {
                             return null;
                           },
                           decoration: InputDecoration(
-                            label: const Text('Password'),
+                            labelText: 'Password',
                             hintText: 'Enter Password',
                             prefixIcon: const Icon(Icons.lock),
-                            hintStyle: const TextStyle(
-                              color: Colors.black26,
-                            ),
+                            hintStyle: const TextStyle(color: Colors.black26),
                             border: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                color: Colors.black12, // Default border color
-                              ),
+                              borderSide: const BorderSide(color: Colors.black12),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             enabledBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                color: Colors.black12, // Default border color
-                              ),
+                              borderSide: const BorderSide(color: Colors.black12),
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
                         ),
-                        const SizedBox(
-                          height: 25.0,
-                        ),
+                        const SizedBox(height: 25.0),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -470,55 +496,43 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                   value: rememberPassword,
                                   onChanged: (bool? value) {
                                     setState(() {
-                                      rememberPassword = value!;
+                                      rememberPassword = value ?? false;
                                     });
                                   },
-                                  // activeColor: lightColorScheme.primary,
                                   focusColor: Colors.black,
                                 ),
                                 const Text(
                                   'Remember me',
-                                  style: TextStyle(
-                                    color: Colors.black45,
-                                  ),
+                                  style: TextStyle(color: Colors.black45),
                                 ),
                               ],
                             ),
                             GestureDetector(
+                              onTap: () {
+                                // Handle forgot password logic here
+                                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ForgotPasswordScreen(),
+                  ),
+                );
+                              
+                              },
                               child: const Text(
                                 'Forget password?',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  // color: lightColorScheme.primary,
                                   color: Colors.black,
                                 ),
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 25.0,
-                        ),
+                        const SizedBox(height: 25.0),
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () {
-                              if (_formSignInKey.currentState!.validate() &&
-                                  rememberPassword) {
-                                ref
-                                    .watch(authViewModelProvider.notifier)
-                                    .loginUser(_emailController.text,
-                                        _passwordController.text);
-                                // Check if email and password match admin credentials
-                              } else if (!rememberPassword) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                        'Please agree to the processing of personal data'),
-                                  ),
-                                );
-                              }
-                            },
+                            onPressed: _login,
                             child: const Text('Login'),
                           ),
                         ),
@@ -527,30 +541,23 @@ class _LoginViewState extends ConsumerState<LoginView> {
                           children: [
                             const Text(
                               'Don\'t have an account? ',
-                              style: TextStyle(
-                                color: Colors.black45,
-                              ),
+                              style: TextStyle(color: Colors.black45),
                             ),
                             GestureDetector(
                               onTap: () {
-                                ref
-                                    .read(loginViewNavigatorProvider)
-                                    .openRegisterView();
+                                ref.read(loginViewNavigatorProvider).openRegisterView();
                               },
                               child: const Text(
                                 'Sign up',
                                 style: TextStyle(
                                   fontFamily: 'EduTASBeginner Bold',
-                                  // color: lightColorScheme.primary,
                                   color: Colors.black,
                                 ),
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 25.0,
-                        ),
+                        const SizedBox(height: 25.0),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -561,15 +568,10 @@ class _LoginViewState extends ConsumerState<LoginView> {
                               ),
                             ),
                             const Padding(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 0,
-                                horizontal: 10,
-                              ),
+                              padding: EdgeInsets.symmetric(horizontal: 10),
                               child: Text(
                                 'Continue with',
-                                style: TextStyle(
-                                  color: Colors.black45,
-                                ),
+                                style: TextStyle(color: Colors.black45),
                               ),
                             ),
                             Expanded(
@@ -580,9 +582,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 25.0,
-                        ),
+                        const SizedBox(height: 25.0),
                         const Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -615,9 +615,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 25.0,
-                        ),
+                        const SizedBox(height: 25.0),
                       ],
                     ),
                   ),
