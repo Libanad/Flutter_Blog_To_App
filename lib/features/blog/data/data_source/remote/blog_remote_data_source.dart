@@ -1,5 +1,5 @@
-import 'package:dio/dio.dart';
 import 'package:blog_app/features/blog/data/model/blog_api_model.dart';
+import 'package:dio/dio.dart';
 
 class BlogPostRemoteDataSource {
   final Dio _dio;
@@ -30,6 +30,7 @@ class BlogPostRemoteDataSource {
   // Create a new blog post
   Future<BlogPostModel> createBlogPost(BlogPostModel blogPost) async {
     try {
+      print(blogPost);
       final response = await _dio.post(
         'posts/create',
         data: blogPost.toJson(),
@@ -48,7 +49,7 @@ class BlogPostRemoteDataSource {
         data: blogPost.toJson(),
       );
       return BlogPostModel.fromJson(response.data);
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       throw Exception('Failed to update blog post: ${e.message}');
     }
   }
@@ -57,7 +58,7 @@ class BlogPostRemoteDataSource {
   Future<void> deleteBlogPost(String id) async {
     try {
       await _dio.delete('posts/$id'); // Replace with your endpoint
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       throw Exception('Failed to delete blog post: ${e.message}');
     }
   }

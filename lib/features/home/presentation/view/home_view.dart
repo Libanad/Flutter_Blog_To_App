@@ -1,23 +1,18 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:dio/dio.dart';
-
 
 import 'package:blog_app/app/contants/api_endpoint.dart';
-import 'package:blog_app/app/screens/notificationScreen.dart';
 import 'package:blog_app/app/screens/profileScreen.dart';
 import 'package:blog_app/app/screens/searchScreen.dart';
 import 'package:blog_app/features/blog/data/model/blog_api_model.dart';
-import 'package:blog_app/features/blog/data/model/blog_hive_model.dart';
 import 'package:blog_app/features/blog/providers/blog_repo_provider.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive/hive.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
-import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -35,7 +30,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
   Future<void> _addNewBlog(Map<String, String> newBlog) async {
     final createBlogPostUseCase = ref.read(createBlogPostUseCaseProvider);
                 final prefs = await SharedPreferences.getInstance();
-                    final email = await prefs.getString('email') ?? 'Not available';
+                    final email = prefs.getString('email') ?? 'Not available';
 
 
 
@@ -79,7 +74,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
   Future<void> _onWritePostPressed() async {
     await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => CreatePostView()),
+      MaterialPageRoute(builder: (context) => const CreatePostView()),
     );
   }
 
@@ -111,9 +106,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (error, stackTrace) => Center(child: Text('Error: $error')),
             ),
-            SearchScreen(),
+            const SearchScreen(),
             // NotificationScreen(),
-            ProfileScreen(),
+            const ProfileScreen(),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -164,7 +159,7 @@ class BlogListView extends StatelessWidget {
           child: ListTile(
             leading: blog.photo != null
                 ?  Image.network(
-                "${ApiEndPoints.imageUrl}"+ blog.photo!,
+                "${ApiEndPoints.imageUrl}${blog.photo!}",
                 fit: BoxFit.cover,
               
                     width: 50,
@@ -220,7 +215,19 @@ class BlogListView extends StatelessWidget {
  // Adjust import based on your project structure
 
 
+
+
+
+
+
+
+
+
+
+
 class CreatePostView extends StatefulWidget {
+  const CreatePostView({super.key});
+
   @override
   _CreatePostViewState createState() => _CreatePostViewState();
 }
@@ -231,7 +238,7 @@ class _CreatePostViewState extends State<CreatePostView> {
   final TextEditingController _categoriesController = TextEditingController();
   File? _file;
   final ImagePicker _picker = ImagePicker();
-  final Dio _dio = Dio(); // Initialize Dio
+  final Dio _dio = Dio();
 
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -249,48 +256,54 @@ class _CreatePostViewState extends State<CreatePostView> {
 
     if (title.isEmpty || desc.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please fill in all fields')),
+        const SnackBar(content: Text('Please fill in all fields')),
       );
       return;
     }
- final prefs = await SharedPreferences.getInstance();
-  final email = prefs.getString('email') ?? 'Not available';    
+
+    final prefs = await SharedPreferences.getInstance();
+    final email = prefs.getString('email') ?? 'Not available';
 
     final post = {
       'title': title,
       'desc': desc,
-      'username': email, // Replace with actual username
-      'userId': '2', // Replace with actual user ID
+      'username': email,
+      'userId': 'dummyUserId', // Replace with actual user ID if available
       'categories': categories.split(',').map((e) => e.trim()).toList(),
     };
+  print(post);
 
     try {
-      // Upload the image if it exists
-      String? imageUrl;
-      if (_file != null) {
-        final formData = FormData.fromMap({
-          'file': await MultipartFile.fromFile(_file!.path, filename: 'image_${DateTime.now().millisecondsSinceEpoch}.jpg'),
-        });
+     String? imageFileName;
+if (_file != null) {
+  final formData = FormData.fromMap({
+    'file': await MultipartFile.fromFile(
+      _file!.path,
+      filename: 'image_${DateTime.now().millisecondsSinceEpoch}.jpg',
+    ),
+  });
 
-        final response = await _dio.post(
-          '${ApiEndPoints.baseUrl}upload',
-          data: formData,
-          options: Options(contentType: 'multipart/form-data'),
-        );
+  final response = await _dio.post(
+    '${ApiEndPoints.baseUrl}upload',
+    data: formData,
+    options: Options(
+      contentType: 'multipart/form-data',
+    ),
+  );
 
-        if (response.statusCode == 200) {
-          imageUrl = response.data['imageUrl'];
-        } else {
-          throw Exception('Failed to upload image');
-        }
-      }
+  if (response.statusCode == 200) {
+    imageFileName = response.data['fileName']; // Adjust based on backend response
+  } else {
+    throw Exception('Failed to upload image');
+  }
+}
 
-      // Include the image URL in the post data if available
-      if (imageUrl != null) {
-        post['photo'] = imageUrl;
-      }
+// Include the image filename in the post data if available
+if (imageFileName != null) {
+  post['photo'] = imageFileName;
+}
 
-      // Create the post
+
       final response = await _dio.post(
         '${ApiEndPoints.baseUrl}posts/create',
         data: post,
@@ -300,9 +313,8 @@ class _CreatePostViewState extends State<CreatePostView> {
       );
 
       if (response.statusCode == 200) {
-        // Navigate to the post details page
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Post created successfully!')),
+          const SnackBar(content: Text('Post created successfully!')),
         );
         Navigator.pop(context);
       } else {
@@ -319,10 +331,9 @@ class _CreatePostViewState extends State<CreatePostView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Post'),
+        title: const Text('Create Post'),
       ),
-            resizeToAvoidBottomInset: true,
-
+      resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -331,32 +342,32 @@ class _CreatePostViewState extends State<CreatePostView> {
             children: [
               TextField(
                 controller: _titleController,
-                decoration: InputDecoration(labelText: 'Title'),
+                decoration: const InputDecoration(labelText: 'Title'),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextField(
                 controller: _descController,
-                decoration: InputDecoration(labelText: 'Description'),
+                decoration: const InputDecoration(labelText: 'Description'),
                 maxLines: 5,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextField(
                 controller: _categoriesController,
-                decoration: InputDecoration(labelText: 'Categories (comma separated)'),
+                decoration: const InputDecoration(labelText: 'Categories (comma separated)'),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _pickImage,
-                child: Text('Pick Image'),
+                child: const Text('Pick Image'),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               _file == null
-                  ? Text('No image selected')
+                  ? const Text('No image selected')
                   : Image.file(_file!, height: 150),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _handleCreate,
-                child: Text('Submit'),
+                child: const Text('Submit'),
               ),
             ],
           ),
@@ -550,16 +561,10 @@ class _BlogDetailViewState extends State<BlogDetailView> {
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
 
-        if (data is List) {
-          setState(() {
-            _comments = data.map((comment) => Comment.fromJson(comment)).toList();
-          });
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to load comments: Unexpected response format')),
-          );
-        }
-      } else {
+        setState(() {
+          _comments = data.map((comment) => Comment.fromJson(comment)).toList();
+        });
+            } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to load comments: ${response.statusCode}')),
         );
@@ -668,7 +673,7 @@ class _BlogDetailViewState extends State<BlogDetailView> {
     final commentText = _commentController.text;
     if (commentText.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Comment cannot be empty')),
+        const SnackBar(content: Text('Comment cannot be empty')),
       );
       return;
     }
@@ -693,7 +698,7 @@ class _BlogDetailViewState extends State<BlogDetailView> {
       _fetchComments(); // Refresh the list of comments
       _commentController.clear();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Posted successfully.')),
+        const SnackBar(content: Text('Posted successfully.')),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

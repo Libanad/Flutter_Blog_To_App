@@ -21,43 +21,39 @@ class BlogPost {
     required this.updatedAt,
   });
 }
+
 class BlogPostModel extends BlogPost {
   BlogPostModel({
-    required String id,
-    required String title,
-    required String desc,
-    String? photo,
-    required String username,
-    required String userId,
-    required List<String> categories,
+    String? id,
+    required super.title,
+    required super.desc,
+    super.photo,
+    required super.username,
+    required super.userId,
+    required super.categories,
     required DateTime createdAt,
     required DateTime updatedAt,
   }) : super(
-          id: id,
-          title: title,
-          desc: desc,
-          photo: photo,
-          username: username,
-          userId: userId,
-          categories: categories,
+          id: id ?? '',
           createdAt: createdAt.toIso8601String(),
           updatedAt: updatedAt.toIso8601String(),
         );
 
   factory BlogPostModel.fromJson(Map<String, dynamic> json) {
     return BlogPostModel(
-      id: json['_id'] as String? ?? '', // Handle null
+      id: json['_id'] as String? ?? '',
       title: json['title'] as String? ?? '',
       desc: json['desc'] as String? ?? '',
       photo: json['photo'] as String?,
       username: json['username'] as String? ?? '',
       userId: json['userId'] as String? ?? '',
       categories: List<String>.from(json['categories'] ?? []),
-      createdAt: DateTime.parse(json['createdAt'] as String? ?? DateTime.now().toIso8601String()),
-      updatedAt: DateTime.parse(json['updatedAt'] as String? ?? DateTime.now().toIso8601String()),
+      createdAt: DateTime.tryParse(json['createdAt'] as String? ?? '') ?? DateTime.now(),
+      updatedAt: DateTime.tryParse(json['updatedAt'] as String? ?? '') ?? DateTime.now(),
     );
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       '_id': id,

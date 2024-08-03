@@ -14,37 +14,73 @@ class BlogPostRepositoryImpl implements BlogPostRepository {
 
   BlogPostRepositoryImpl(this._remoteDataSource, this._localDataSource);
 
-  @override
-  Future<Either<Failure, BlogPostModel>> createBlogPost(BlogPostModel blogPost) async {
-    try {
-      // Call the remote data source to create the blog post
-      final remoteBlogPost = await _remoteDataSource.createBlogPost(blogPost);
+  // @override
+  // Future<Either<Failure, BlogPostModel>> createBlogPost(BlogPostModel blogPost) async {
+  //   try {
+  //     // Call the remote data source to create the blog post
+  //     final remoteBlogPost = await _remoteDataSource.createBlogPost(blogPost);
 
-      // Ensure the remoteBlogPost is not null
-      if (remoteBlogPost == null) {
-        return Left(Failure(error: 'Failed to create blog post'));
-      }
+  //     // Ensure the remoteBlogPost is not null
+  //     if (remoteBlogPost == null) {
+  //       return Left(Failure(error: 'Failed to create blog post'));
+  //     }
 
-      // Save the blog post to the local data source (Hive)
-      final blogPostHiveModel = BlogPostHiveModel(
-        id: remoteBlogPost.id,
-        title: remoteBlogPost.title ?? '',
-        desc: remoteBlogPost.desc ?? '',
-        photo: remoteBlogPost.photo,
-        username: remoteBlogPost.username ?? '',
-        userId: remoteBlogPost.userId ?? '',
-        categories: remoteBlogPost.categories ?? [],
-        createdAt: remoteBlogPost.createdAt ?? DateTime.now().toIso8601String(),
-        updatedAt: remoteBlogPost.updatedAt ?? DateTime.now().toIso8601String(),
-      );
-      await _localDataSource.put(blogPostHiveModel.id, blogPostHiveModel);
+  //     // Save the blog post to the local data source (Hive)
+  //     final blogPostHiveModel = BlogPostHiveModel(
+  //       id: remoteBlogPost.id,
+  //       title: remoteBlogPost.title ?? '',
+  //       desc: remoteBlogPost.desc ?? '',
+  //       photo: remoteBlogPost.photo,
+  //       username: remoteBlogPost.username ?? '',
+  //       userId: remoteBlogPost.userId ?? '',
+  //       categories: remoteBlogPost.categories ?? [],
+  //       createdAt: remoteBlogPost.createdAt ?? DateTime.now().toIso8601String(),
+  //       updatedAt: remoteBlogPost.updatedAt ?? DateTime.now().toIso8601String(),
+  //     );
+  //     await _localDataSource.put(blogPostHiveModel.id, blogPostHiveModel);
 
-      return Right(remoteBlogPost);
-    } catch (e) {
-      print('Exception caught: ${e.toString()}');
-      return Left(Failure(error: 'Failed to create blog post: ${e.toString()}'));
+  //     return Right(remoteBlogPost);
+  //   } catch (e) {
+  //     print('Exception caught: ${e.toString()}');
+  //     return Left(Failure(error: 'Failed to create blog post: ${e.toString()}'));
+  //   }
+  // }
+@override
+Future<Either<Failure, BlogPostModel>> createBlogPost(BlogPostModel blogPost) async {
+  try {
+    // Call the remote data source to create the blog post
+    final remoteBlogPost = await _remoteDataSource.createBlogPost(blogPost);
+
+    // Ensure the remoteBlogPost is not null
+    if (remoteBlogPost == null) {
+      return Left(Failure(error: 'Failed to create blog post'));
     }
+
+    // Ensure id is of type int
+    final String blogPostId = remoteBlogPost.id.toString();
+
+    // Save the blog post to the local data source (Hive)
+    final blogPostHiveModel = BlogPostHiveModel(
+      id: blogPostId,
+      title: remoteBlogPost.title ?? '',
+      desc: remoteBlogPost.desc ?? '',
+      photo: remoteBlogPost.photo,
+      username: remoteBlogPost.username ?? '',
+      userId: remoteBlogPost.userId ?? '',
+      categories: remoteBlogPost.categories ?? [],
+      createdAt: remoteBlogPost.createdAt ?? DateTime.now().toIso8601String(),
+      updatedAt: remoteBlogPost.updatedAt ?? DateTime.now().toIso8601String(),
+    );
+
+    // await _localDataSource.put(blogPostHiveModel.id, blogPostHiveModel);
+
+    return Right(remoteBlogPost);
+  } catch (e) {
+    print('Exception caught: ${e.toString()}');
+    return Left(Failure(error: 'Failed to create blog post: ${e.toString()}'));
   }
+}
+
 
   @override
   Future<Either<Failure, void>> deleteBlogPost(String id) async {
